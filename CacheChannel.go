@@ -72,7 +72,11 @@ func (c *CacheChannel) initCacheChannel() error {
 	//loading config
 	bytes, err := ioutil.ReadFile(path + "/config/go2cache.yaml")
 	if err != nil {
-		log.Fatal("go2cache loading config error:", err)
+		bb, e := ioutil.ReadFile(path + "/resources/config/go2cache.yaml")
+		if e != nil {
+			log.Fatalf("go2cache loading config error:%s ,go2cache.yaml file must in exe path : '/config' or '/resources/config' ", err.Error())
+		}
+		bytes = bb
 	}
 	var config Go2CacheConfig
 	e := yaml.Unmarshal(bytes, &config)
