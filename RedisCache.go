@@ -63,5 +63,3 @@ func (cache *RedisCache) Incr(key string) error {
 	_, err := redis.Bool(cache.do("INCRBY", key, 1))
 	return err
 }
-
-//todo 根据业务需求，新增 redis的 通用方法

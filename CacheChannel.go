@@ -104,10 +104,8 @@ func (c *CacheChannel) initCacheChannel() error {
 		//init psc with redis
 		c.psb = &PubSub{Client: c.rdp.redisClient, Channel: config.Go2CacheRedis.Channel, CacheChannel: c}
 		c.psb.Subscribe()
-
 		//redis name space
 		c.rdp.redisNameSpace = config.Go2CacheRedis.RedisNameSpace
-
 		for _, region := range c.ragionArray {
 			c.mmp.BuildCache(region.Name)
 			log.Println("build memory cahce region :", region.String())
@@ -133,6 +131,12 @@ func (c *CacheChannel) GetLevel1(region, key string) interface{} {
 func (c *CacheChannel) GetBytesLevel2(region, key string) (reply interface{}, err error) {
 	redisCache, _ := c.rdp.BuildCache(region)
 	return redisCache.(*RedisCache).GetBytes(key)
+}
+
+//Get redis cache
+func (c *CacheChannel) GetRedisCache(region string) *RedisCache {
+	redisCache, _ := c.rdp.BuildCache(region)
+	return redisCache.(*RedisCache)
 }
 
 //base protobuf struck ,read from level2 cache
