@@ -133,7 +133,7 @@ func (c *CacheChannel) GetBytesLevel2(region, key string) (reply interface{}, er
 	return redisCache.(*RedisCache).GetBytes(key)
 }
 
-//Get redis cache
+//Get redis cache by region
 func (c *CacheChannel) GetRedisCache(region string) *RedisCache {
 	redisCache, _ := c.rdp.BuildCache(region)
 	return redisCache.(*RedisCache)
