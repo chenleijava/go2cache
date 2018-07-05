@@ -19,6 +19,7 @@ go2cache_redis:
  idle_time_out: 3600
  channel: j2cache
  redis_name_space: j2cache
+ psb: false
 
 
 

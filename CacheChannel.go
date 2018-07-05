@@ -52,6 +52,7 @@ type Go2CacheRedis struct {
 	IdleTimeOut    int    `yaml:"idle_time_out"`
 	Channel        string `yaml:"channel"`
 	RedisNameSpace string `yaml:"redis_name_space"`
+	Psb            bool   `yaml:"psb"`
 }
 
 //region config
@@ -106,8 +107,10 @@ func (c *CacheChannel) initCacheChannel() error {
 		//init redis cache
 		c.rdp.InitRedisCache(&config.Go2CacheRedis)
 		//init psc with redis
-		c.psb = &PubSub{Client: c.rdp.redisClient, Channel: config.Go2CacheRedis.Channel, CacheChannel: c}
-		c.psb.Subscribe()
+		if config.Go2CacheRedis.Psb {
+			c.psb = &PubSub{Client: c.rdp.redisClient, Channel: config.Go2CacheRedis.Channel, CacheChannel: c}
+			c.psb.Subscribe()
+		}
 		//redis name space
 		c.rdp.redisNameSpace = config.Go2CacheRedis.RedisNameSpace
 		for _, region := range c.ragionArray {
