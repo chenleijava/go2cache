@@ -1,0 +1,24 @@
+#go2cache regions info
+#数组 ["region0,size0","region1,size1"]
+go2cache_regions: ["user_region,120","caffeine.region.routeInfo,128","caffeine.region.servingRule,128"]
+
+
+#redis config
+# connect_info redis连接地址
+# password redis连接地址
+# db_index redis db index  default is 0
+# max_idle 最大空闲链接
+# max_active 链接最大活跃数
+# 连接空闲时间 idle_time_out ，单位 s
+go2cache_redis:
+ connect_info: 127.0.0.1:6379
+ password:
+ db_index: 0
+ max_idle: 500
+ max_active: 1000
+ idle_time_out: 3600
+ channel: j2cache
+ redis_name_space: j2cache
+
+
+
