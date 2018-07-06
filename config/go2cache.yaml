@@ -1,6 +1,6 @@
 #go2cache regions info
 #数组 ["region0,size0","region1,size1"]
-go2cache_regions: ["user_region,120","caffeine.region.routeInfo,128","caffeine.region.servingRule,128"]
+go2cache_regions: ["user_region,120"]
 
 
 #redis config
@@ -18,7 +18,7 @@ go2cache_redis:
  max_active: 1000
  idle_time_out: 3600
  channel: j2cache
- redis_name_space: j2cache
+ redis_name_space: go2cache
  psb: false
 
 
