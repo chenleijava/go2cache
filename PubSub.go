@@ -37,16 +37,13 @@ type Command struct {
 	Src      int      `json:"src"`
 }
 
-func (p *PubSub) do(commandName string, args ...interface{}) (reply interface{}, err error) {
-	conn := p.Client.Get()
-	defer conn.Close()
-	return conn.Do(commandName, args)
-}
 
 //发送清楚缓存的广播命令
 func (p *PubSub) SendEvictCmd(region string, keys ...string) {
 	data, _ := json.Marshal(&Command{Region: region, Keys: keys, Operator: OPT_EVICT_KEY})
-	_, err := p.do("PSUBSCRIBE", p.Channel, data) // 指Channel 发布 信息
+	conn := p.Client.Get()
+	defer conn.Close()                            // close
+	_, err := conn.Do("PUBLISH", p.Channel, data) // 指Channel 发布 信息
 	if err != nil {
 		log.Printf("error in pubish , info:%s", err)
 	}
@@ -55,7 +52,9 @@ func (p *PubSub) SendEvictCmd(region string, keys ...string) {
 //发送清除缓存的广播命令
 func (p *PubSub) SendClearCmd(region string) {
 	data, _ := json.Marshal(&Command{Region: region, Keys: nil, Operator: OPT_CLEAR_KEY})
-	_, err := p.do("PSUBSCRIBE", p.Channel, data)
+	conn := p.Client.Get()
+	defer conn.Close()
+	_, err := conn.Do("PUBLISH", p.Channel, data) // 指Channel 发布 信息
 	if err != nil {
 		log.Printf("error in pubish , info:%s", err)
 	}
