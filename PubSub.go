@@ -18,6 +18,7 @@ type PubSub struct {
 	Client       *redis.Pool
 	Channel      string
 	CacheChannel *CacheChannel
+	Region       string
 }
 
 //j2cache  发布 订阅消息模块 封装
@@ -37,6 +38,7 @@ type Command struct {
 }
 
 func (p *PubSub) do(commandName string, args ...interface{}) (reply interface{}, err error) {
+	args[0] = p.Region + ":" + args[0].(string) //[0]上数据是key ，这里进行key的拼接形成最终的key为   region:key ,同 j2cache保持一致
 	conn := p.Client.Get()
 	defer conn.Close()
 	return conn.Do(commandName, args)
@@ -45,7 +47,7 @@ func (p *PubSub) do(commandName string, args ...interface{}) (reply interface{},
 //发送清楚缓存的广播命令
 func (p *PubSub) SendEvictCmd(region string, keys ...string) {
 	data, _ := json.Marshal(&Command{Region: region, Keys: keys, Operator: OPT_EVICT_KEY})
-	_, err := p.do("PUBLISH", p.Channel, data) // 指Channel 发布 信息
+	_, err := p.do("PUBLISH",keys,p.Channel, data) // 指Channel 发布 信息
 	if err != nil {
 		log.Printf("error in pubish , info:%s", err)
 	}
@@ -78,8 +80,8 @@ func (p *PubSub) Subscribe() {
 					log.Printf("command unmarshl json error:%s", e)
 				}
 				if cmd.Operator == OPT_EVICT_KEY { //删除一级缓存数据
-				    log.Printf("evict key :%s region:%s", cmd.Keys, cmd.Region)
-					p.CacheChannel.Evict(cmd.Region,cmd.Keys)
+					log.Printf("evict key :%s region:%s", cmd.Keys, cmd.Region)
+					p.CacheChannel.Evict(cmd.Region, cmd.Keys)
 				} else if cmd.Operator == OPT_CLEAR_KEY { //  清除缓存
 					log.Printf("clear cache  key :%s region:%s", cmd.Keys, cmd.Region)
 				} else if cmd.Operator == OPT_JOIN { // 节点加入

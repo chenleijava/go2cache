@@ -40,6 +40,7 @@ type CacheChannel struct {
 	readDataMutex sync.Mutex
 	//redis pub and sub
 	psb *PubSub
+
 }
 
 // redis cache config
@@ -108,7 +109,7 @@ func (c *CacheChannel) initCacheChannel() error {
 		c.rdp.InitRedisCache(&config.Go2CacheRedis)
 		//init psc with redis
 		if config.Go2CacheRedis.Psb {
-			c.psb = &PubSub{Client: c.rdp.redisClient, Channel: config.Go2CacheRedis.Channel, CacheChannel: c}
+			c.psb = &PubSub{Client: c.rdp.redisClient, Channel: config.Go2CacheRedis.Channel, CacheChannel: c,Region:config.Go2CacheRedis.RedisNameSpace}
 			c.psb.Subscribe()
 		}
 		//redis name space

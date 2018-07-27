@@ -20,6 +20,3 @@ go2cache_redis:
  channel: j2cache
  redis_name_space: j2cache
  psb: false
-
-
-
