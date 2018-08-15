@@ -8,6 +8,7 @@ import (
 )
 
 func TestGetCacheChannel(t *testing.T) {
+	SetConfigPath("/config/go2cache.yaml")
 	cacheChannel := GetCacheChannel()
 	cache := cacheChannel.GetRedisCache("user_region")
 	var key = time.Now().Format("2006-01-02 15:04:05")

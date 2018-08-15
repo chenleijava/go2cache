@@ -15,6 +15,13 @@ import (
 //cache channel ref
 var cacheChannel *CacheChannel
 var synOnce sync.Once
+var configPath =""
+
+//
+func SetConfigPath(path string)  {
+	configPath=path
+}
+
 
 //cache channel single object
 func GetCacheChannel() *CacheChannel {
@@ -22,11 +29,13 @@ func GetCacheChannel() *CacheChannel {
 		synOnce.Do(func() {
 			//init cache channel
 			cacheChannel = &CacheChannel{}
-			cacheChannel.initCacheChannel()
+			cacheChannel.initCacheChannel(configPath)
 		})
 	}
 	return cacheChannel
 }
+
+
 
 //缓存操作入口
 type CacheChannel struct {
@@ -69,16 +78,16 @@ func exePath() string {
 }
 
 //init go2cache
-func (c *CacheChannel) initCacheChannel() error {
-	path := exePath()
+//path for config
+func (c *CacheChannel) initCacheChannel(path string) error {
+	if path==""{
+		log.Fatalf("go2cache loading config error:%s ,go2cache.yaml file must in exe path : '/config' or '/resources/config' ", "config path not null")
+	}
+	exePath := exePath()
 	//loading config
-	bytes, err := ioutil.ReadFile(path + "/config/go2cache.yaml")
+	bytes, err := ioutil.ReadFile(exePath + path)
 	if err != nil {
-		bb, e := ioutil.ReadFile(path + "/resources/config/go2cache.yaml")
-		if e != nil {
-			log.Fatalf("go2cache loading config error:%s ,go2cache.yaml file must in exe path : '/config' or '/resources/config' ", err.Error())
-		}
-		bytes = bb
+		log.Fatalf("go2cache loading config error:%s ,go2cache.yaml file must in exe path : '/config' or '/resources/config' ", err.Error())
 	}
 	var config Go2CacheConfig
 	e := yaml.Unmarshal(bytes, &config)
