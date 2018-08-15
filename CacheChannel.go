@@ -15,12 +15,7 @@ import (
 //cache channel ref
 var cacheChannel *CacheChannel
 var synOnce sync.Once
-var configPath =""
 
-//
-func SetConfigPath(path string)  {
-	configPath=path
-}
 
 
 //cache channel single object
@@ -29,7 +24,7 @@ func GetCacheChannel() *CacheChannel {
 		synOnce.Do(func() {
 			//init cache channel
 			cacheChannel = &CacheChannel{}
-			cacheChannel.initCacheChannel(configPath)
+			cacheChannel.initCacheChannel()
 		})
 	}
 	return cacheChannel
@@ -79,16 +74,20 @@ func exePath() string {
 
 //init go2cache
 //path for config
-func (c *CacheChannel) initCacheChannel(path string) error {
-	if path==""{
-		log.Fatalf("go2cache loading config error:%s ,go2cache.yaml file must in exe path : '/config' or '/resources/config' ", "config path not null")
-	}
+func (c *CacheChannel) initCacheChannel() error {
+
 	exePath := exePath()
+
 	//loading config
-	bytes, err := ioutil.ReadFile(exePath + path)
+	bytes, err := ioutil.ReadFile(exePath + "/config/go2cache.yaml")
 	if err != nil {
-		log.Fatalf("go2cache loading config error:%s ,go2cache.yaml file must in exe path : '/config' or '/resources/config' ", err.Error())
+		bb,ee:=ioutil.ReadFile(exePath+"/resources/config/go2cache.yaml")
+		if ee!=nil{
+			log.Fatalf("go2cache loading config error:%s ,go2cache.yaml file must in exe path : '/config' or '/resources/config' ", err.Error())
+		}
+		bytes=bb
 	}
+
 	var config Go2CacheConfig
 	e := yaml.Unmarshal(bytes, &config)
 	if e != nil {
