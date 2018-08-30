@@ -1,10 +1,10 @@
 package go2cache
 
 import (
+	"github.com/garyburd/redigo/redis"
+	"log"
 	"testing"
 	"time"
-	"log"
-	"github.com/garyburd/redigo/redis"
 )
 
 func TestGetCacheChannel(t *testing.T) {
@@ -14,11 +14,14 @@ func TestGetCacheChannel(t *testing.T) {
 	var filed = key
 	v := cache.HincrBy(key, filed, 1)
 	log.Printf("hincyBy v:%d", v)
-	hget, _:= redis.Int(cache.Hget(key, filed), nil)
+	hget, _ := redis.Int(cache.Hget(key, filed), nil)
 	log.Printf("Hget v:%d", hget)
 	intMap := cache.HgetAllIntMap(key)
 	log.Printf("HgetAllIntMap:%d", intMap[key])
 	for k := range intMap {
 		delete(intMap, k)
 	}
+	cache.Hset(key, "1", "this is test")
+	vv := cache.Hget(key, "1") // Get bytes array
+	log.Printf("hset value:%s", string(vv.([]byte)))
 }

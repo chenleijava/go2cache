@@ -79,11 +79,19 @@ func (cache *RedisCache) HincrBy(key, filed string, value int) int64 {
 	v, _ := redis.Int64(cache.do("HINCRBY", key, filed, value))
 	return v
 }
+
+//HSET
+func (cache *RedisCache) Hset(key, filed string, value interface{}) int64 {
+	v, _ := redis.Int64(cache.do("HSET", key, filed, value))
+	return v
+}
+
 //HGET
 func (cache *RedisCache) Hget(key, filed string) interface{} {
 	reply, _ := cache.do("HGET", key, filed)
 	return reply
 }
+
 //HGETALL
 func (cache *RedisCache) HgetAllStringMap(key string) map[string]string {
 	mp, err := redis.StringMap(cache.do("HGETALL", key))
@@ -92,6 +100,7 @@ func (cache *RedisCache) HgetAllStringMap(key string) map[string]string {
 	}
 	return mp
 }
+
 //HGETALL
 func (cache *RedisCache) HgetAllIntMap(key string) map[string]int {
 	mp, err := redis.IntMap(cache.do("HGETALL", key))
@@ -100,6 +109,3 @@ func (cache *RedisCache) HgetAllIntMap(key string) map[string]int {
 	}
 	return mp
 }
-
-
-
