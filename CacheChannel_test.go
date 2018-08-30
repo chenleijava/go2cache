@@ -21,7 +21,9 @@ func TestGetCacheChannel(t *testing.T) {
 	for k := range intMap {
 		delete(intMap, k)
 	}
-	cache.Hset(key, "1", "this is test")
-	vv := cache.Hget(key, "1") // Get bytes array
+	cache.Hset(key, "2", "this is test")
+	vv := cache.Hget(key, "2") // Get bytes array
 	log.Printf("hset value:%s", string(vv.([]byte)))
+	cache.HgetAllBytesMap(key)
+
 }
