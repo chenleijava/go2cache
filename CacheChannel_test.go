@@ -3,6 +3,7 @@ package go2cache
 import (
 	"github.com/garyburd/redigo/redis"
 	"log"
+	"strconv"
 	"testing"
 	"time"
 )
@@ -25,5 +26,23 @@ func TestGetCacheChannel(t *testing.T) {
 	vv := cache.Hget(key, "2") // Get bytes array
 	log.Printf("hset value:%s", string(vv.([]byte)))
 	cache.HgetAllBytesMap(key)
+
+	key="key2"
+	cache.SAdd(key, 1)
+	cache.SAdd(key, 2)
+	bb := cache.Sismember(key, 1)
+	log.Printf("Sismember:%t", bb)
+	smembers := cache.Smembers(key)
+	for _, dd := range smembers {
+		x, _ := strconv.Atoi(string(dd.([]byte)))
+		log.Printf("data:%d", x)
+	}
+
+	sa:=cache.SmembersString(key)
+	for _, v := range *sa {
+		log.Printf("value %s",v)
+	}
+	sa=nil
+	cache.Del(key)
 
 }
