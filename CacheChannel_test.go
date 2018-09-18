@@ -27,7 +27,11 @@ func TestGetCacheChannel(t *testing.T) {
 	log.Printf("hset value:%s", string(vv.([]byte)))
 	cache.HgetAllBytesMap(key)
 
-	key="key2"
+	l := cache.Hlen(key)
+
+	log.Printf("len:%d", l)
+
+	key = "key2"
 	cache.SAdd(key, 1)
 	cache.SAdd(key, 2)
 	bb := cache.Sismember(key, 1)
@@ -38,11 +42,11 @@ func TestGetCacheChannel(t *testing.T) {
 		log.Printf("data:%d", x)
 	}
 
-	sa:=cache.SmembersString(key)
+	sa := cache.SmembersString(key)
 	for _, v := range *sa {
-		log.Printf("value %s",v)
+		log.Printf("value %s", v)
 	}
-	sa=nil
+	sa = nil
 	cache.Del(key)
 
 }

@@ -194,6 +194,12 @@ func (cache *RedisCache) HgetAllBytesMap(key string) map[string][]byte {
 	return mp
 }
 
+//HLen
+func (cache *RedisCache) Hlen(key string) int {
+	l, _ := redis.Int(cache.do("HLEN", key))
+	return l
+}
+
 //return base data array ?
 func bytesMap(result interface{}, err error) (map[string][]byte, error) {
 	values, err := redis.Values(result, err)
