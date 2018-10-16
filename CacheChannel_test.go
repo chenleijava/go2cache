@@ -34,6 +34,13 @@ func TestGetCacheChannel(t *testing.T) {
 	key = "key2"
 	cache.SAdd(key, 1)
 	cache.SAdd(key, 2)
+
+	setLen, e := redis.Int64(cache.Do("SCARD", "go2cache:user_region:key2"))
+	if e != nil {
+		log.Fatal(e.Error())
+	}
+	log.Printf("scard len :%d", setLen)
+
 	bb := cache.Sismember(key, 1)
 	log.Printf("Sismember:%t", bb)
 	smembers := cache.Smembers(key)

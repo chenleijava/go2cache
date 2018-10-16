@@ -37,6 +37,15 @@ type RedisCache struct {
 	region      string // region   -->  redis_name_space+":"+region
 }
 
+
+//direct Do command
+func (cache *RedisCache) Do(commandName string, args ...interface{}) (reply interface{}, err error) {
+	con := cache.redisClient.Get()
+	defer con.Close()
+	return con.Do(commandName, args...)
+}
+
+
 //send msg to redis
 func (cache *RedisCache) do(commandName string, args ...interface{}) (reply interface{}, err error) {
 	args[0] = cache.region + ":" + args[0].(string) //[0]上数据是key ，这里进行key的拼接形成最终的key为   region:key ,同 j2cache保持一致
