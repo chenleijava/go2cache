@@ -24,6 +24,14 @@ func TestGetCacheChannel(t *testing.T) {
 	}
 	cache.Hset(key, "2", "this is test")
 	vv := cache.Hget(key, "2") // Get bytes array
+	obj := cache.Hdel(key, "2")
+	vv = cache.Hget(key, "2") // Get bytes array
+
+	log.Printf("%s", obj)
+
+	cache.Hset(key, "2", "this is test")
+
+	vv = cache.Hget(key, "2") // Get bytes array
 	log.Printf("hset value:%s", string(vv.([]byte)))
 	cache.HgetAllBytesMap(key)
 

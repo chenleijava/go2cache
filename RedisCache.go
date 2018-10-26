@@ -121,6 +121,13 @@ func (cache *RedisCache) Hget(key, filed string) interface{} {
 	return reply
 }
 
+//HDEL
+func (cache *RedisCache) Hdel(key, filed string) interface{} {
+	reply, _ := cache.do("HDEL", key, filed)
+	return reply
+}
+
+
 //https://blog.csdn.net/weixin_37696997/article/details/78634043
 //SADD
 func (cache *RedisCache) SAdd(key, member interface{}) interface{} {
