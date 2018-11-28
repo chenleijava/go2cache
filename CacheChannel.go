@@ -219,7 +219,7 @@ func (c *CacheChannel) Set(region, key string, value interface{}) {
 
 //send evict cmd to nodes
 func (c *CacheChannel) sendEvictCmd(region, key string) {
-	log.Println("发送清理指令:", region+"@"+key)
+	//log.Println("发送清理指令:", region+"@"+key)
 	c.psb.SendEvictCmd(region, key)
 }
 

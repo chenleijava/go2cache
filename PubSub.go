@@ -78,7 +78,7 @@ func (p *PubSub) Subscribe() {
 					log.Printf("command unmarshl json error:%s", e)
 				}
 				if cmd.Operator == OPT_EVICT_KEY { //删除一级缓存数据
-					log.Printf("evict key :%s region:%s", cmd.Keys, cmd.Region)
+					//log.Printf("evict key :%s region:%s", cmd.Keys, cmd.Region)
 					p.CacheChannel.Evict(cmd.Region, cmd.Keys)
 				} else if cmd.Operator == OPT_CLEAR_KEY { //  清除缓存
 					log.Printf("clear cache  key :%s region:%s", cmd.Keys, cmd.Region)
